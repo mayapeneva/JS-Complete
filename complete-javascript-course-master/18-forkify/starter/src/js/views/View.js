@@ -3,20 +3,20 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
-  render(data) {
-    if(!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
+  render(data, render = true) {
+    if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
 
     this._data = data;
 
     const markup = this._generateMarkUp();
 
+    if(!render) return this.markup;
+
     this._clear();
     this._parentElement.insertAdjacentHTML(`afterbegin`, markup);
   }
 
-  update(data){
-    if(!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
-
+  update(data) {
     this._data = data;
 
     const newMarkup = this._generateMarkUp();
@@ -26,7 +26,7 @@ export default class View {
     const currentElements = Array.from(this._parentElement.querySelectorAll('*'));
     newElements.forEach((newElement, i) => {
       const currentElement = currentElements[i];
-      if (!newElement.isEqualNode(currentElement)){
+      if (!newElement.isEqualNode(currentElement)) {
         if (newElement.firstChild?.nodeValue.trim() !== '')
           currentElement.textContent = newElement.textContent;
 
@@ -47,6 +47,7 @@ export default class View {
           </svg>
         </div>`;
 
+    this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markupSpinner);
   }
 
